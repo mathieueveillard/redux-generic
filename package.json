@@ -1,0 +1,44 @@
+{
+  "name": "redux-generic",
+  "version": "0.1.0-alpha",
+  "description": "Generic (CRUD) action creators and reducer, useful for normalizing state",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "jest --config=jest.config.json",
+    "test:watch": "npm test -- --watch",
+    "prettify": "prettier --write 'src/**/*.ts'",
+    "build": "rm -rf lib && mkdir lib && tsc -p tsconfig.build.json",
+    "test:pack": "npm run build && npm pack",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mathieueveillard/redux-generic.git"
+  },
+  "keywords": [
+    "redux",
+    "normalize",
+    "normalization",
+    "CRUD",
+    "generic",
+    "action",
+    "reducer",
+    "domain"
+  ],
+  "author": "Mathieu Eveillard",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/mathieueveillard/redux-generic/issues"
+  },
+  "homepage": "https://github.com/mathieueveillard/redux-generic#readme",
+  "devDependencies": {
+    "@types/jest": "^24.0.13",
+    "jest": "^24.8.0",
+    "prettier": "^1.17.1",
+    "ts-jest": "^24.0.2",
+    "typescript": "^3.5.1"
+  },
+  "dependencies": {
+    "redux": "^4.0.1"
+  }
+}
