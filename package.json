@@ -1,6 +1,6 @@
 {
   "name": "redux-generic",
-  "version": "0.1.0-alpha",
+  "version": "0.1.1-alpha",
   "description": "Generic (CRUD) action creators and reducer, useful for normalizing state",
   "main": "lib/index.js",
   "scripts": {
@@ -35,10 +35,8 @@
     "@types/jest": "^24.0.13",
     "jest": "^24.8.0",
     "prettier": "^1.17.1",
+    "redux": "^4.0.1",
     "ts-jest": "^24.0.2",
     "typescript": "^3.5.1"
-  },
-  "dependencies": {
-    "redux": "^4.0.1"
   }
 }
