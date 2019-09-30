@@ -1,6 +1,6 @@
 {
   "name": "redux-generic",
-  "version": "0.1.1-alpha",
+  "version": "0.1.2-alpha",
   "description": "Generic (CRUD) action creators and reducer, useful for normalizing state",
   "main": "lib/index.js",
   "scripts": {
