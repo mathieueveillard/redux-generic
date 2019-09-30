@@ -51,11 +51,11 @@ function insert<T>(state: GenericState<T>, id: string, item: T): GenericState<T>
   };
 }
 
-function upsert<T>(state: GenericState<T>, id: string, item: T): GenericState<T> {
-  return {
-    ...state,
-    [id]: item
-  };
+function upsert<T>(state: GenericState<T>, id: string, item: T | Partial<T>): GenericState<T> {
+  if (state[id] === undefined) {
+    return insert<T>(state, id, item as T);
+  }
+  return update<T>(state, id, item);
 }
 
 function update<T>(state: GenericState<T>, id: string, patch: Partial<T>): GenericState<T> {

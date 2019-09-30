@@ -107,10 +107,11 @@ describe("Upsert", function() {
     });
   });
 
-  it("Should replace item if already present in the state", function() {
+  it("Should update the item if already present in the state", function() {
     // GIVEN
     const insertAction: InsertAction<TestItem> = domain.actionCreators.createInsertAction<TestItem>("id", {
-      name: "name"
+      name: "name",
+      optional0: "optional0"
     });
     const upsertAction: UpsertAction<TestItem> = domain.actionCreators.createUpsertAction<TestItem>("id", {
       name: "updated name"
@@ -123,7 +124,7 @@ describe("Upsert", function() {
     // THEN
     expect(store.getState()).toEqual({
       ["anotherId"]: { name: "anotherName" },
-      ["id"]: { name: "updated name" }
+      ["id"]: { name: "updated name", optional0: "optional0" }
     });
   });
 });
@@ -155,7 +156,8 @@ describe("Update", function() {
   it("Should update item in the state", function() {
     // GIVEN
     const insertAction: InsertAction<TestItem> = domain.actionCreators.createInsertAction<TestItem>("id", {
-      name: "name"
+      name: "name",
+      optional0: "optional0"
     });
     const updateAction: UpdateAction<TestItem> = domain.actionCreators.createUpdateAction<TestItem>("id", {
       name: "updated name"
@@ -168,7 +170,7 @@ describe("Update", function() {
     // THEN
     expect(store.getState()).toEqual({
       ["anotherId"]: { name: "anotherName" },
-      ["id"]: { name: "updated name" }
+      ["id"]: { name: "updated name", optional0: "optional0" }
     });
   });
 
