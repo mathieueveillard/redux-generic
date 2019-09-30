@@ -32,11 +32,11 @@
   },
   "homepage": "https://github.com/mathieueveillard/redux-generic#readme",
   "devDependencies": {
-    "@types/jest": "^24.0.13",
-    "jest": "^24.8.0",
-    "prettier": "^1.17.1",
-    "redux": "^4.0.1",
-    "ts-jest": "^24.0.2",
-    "typescript": "^3.5.1"
+    "@types/jest": "^24.0.18",
+    "jest": "^24.9.0",
+    "prettier": "^1.18.2",
+    "redux": "^4.0.4",
+    "ts-jest": "^24.1.0",
+    "typescript": "^3.6.3"
   }
 }
