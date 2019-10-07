@@ -1,13 +1,13 @@
 import { InsertAction, UpsertAction, UpdateAction, DeleteAction } from "./actions";
 
-export interface GenericActionCreators<T> {
+export interface CollectionActionCreators<T> {
   createInsertAction(id: string, item: T, type?: string): InsertAction<T>;
   createUpsertAction(id: string, item: T, type?: string): UpsertAction<T>;
   createUpdateAction(id: string, patch: Partial<T>, type?: string): UpdateAction<T>;
   createDeleteAction(id: string, type?: string): DeleteAction<T>;
 }
 
-export function makeGenericActionCreators<T>(domain: string | symbol): GenericActionCreators<T> {
+export function makeCollectionActionCreators<T>(domain: string | symbol): CollectionActionCreators<T> {
   function createInsertAction<T>(id: string, item: T, type?: string): InsertAction<T> {
     return {
       type: type || "GENERIC_INSERT_ACTION",

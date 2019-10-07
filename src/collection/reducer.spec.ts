@@ -1,6 +1,6 @@
 import { createStore, Action, Store } from "redux";
-import { GenericDomain, createGenericDomain } from "../domain";
-import { InsertAction, UpsertAction, UpdateAction, DeleteAction } from "../actions";
+import { CollectionDomain, createCollectionDomain } from "./domain";
+import { InsertAction, UpsertAction, UpdateAction, DeleteAction } from "./actions";
 
 interface TestItem {
   name: string;
@@ -8,7 +8,7 @@ interface TestItem {
   optional1?: string;
 }
 
-const domain: GenericDomain<TestItem> = createGenericDomain<TestItem>();
+const domain: CollectionDomain<TestItem> = createCollectionDomain<TestItem>();
 let store: Store;
 
 describe("Generic and domain", function() {
@@ -53,7 +53,7 @@ describe("Insert", function() {
 
   it("Should add item to the state state", function() {
     // GIVEN
-    const action: InsertAction<TestItem> = domain.actionCreators.createInsertAction<TestItem>("id", {
+    const action: InsertAction<TestItem> = domain.actionCreators.createInsertAction("id", {
       name: "name"
     });
 
@@ -68,7 +68,7 @@ describe("Insert", function() {
 
   it("Should throw error when trying to insert an item that already exists in state", function() {
     // GIVEN
-    const action: InsertAction<TestItem> = domain.actionCreators.createInsertAction<TestItem>("id", {
+    const action: InsertAction<TestItem> = domain.actionCreators.createInsertAction("id", {
       name: "name"
     });
     store.dispatch(action);
@@ -82,18 +82,15 @@ describe("Insert", function() {
 describe("Upsert", function() {
   beforeEach(function() {
     store = createStore(domain.reducer);
-    const anotherInsertAction: InsertAction<TestItem> = domain.actionCreators.createInsertAction<TestItem>(
-      "anotherId",
-      {
-        name: "anotherName"
-      }
-    );
+    const anotherInsertAction: InsertAction<TestItem> = domain.actionCreators.createInsertAction("anotherId", {
+      name: "anotherName"
+    });
     store.dispatch(anotherInsertAction);
   });
 
   it("Should add item to the state if not present", function() {
     // GIVEN
-    const action: UpsertAction<TestItem> = domain.actionCreators.createUpsertAction<TestItem>("id", {
+    const action: UpsertAction<TestItem> = domain.actionCreators.createUpsertAction("id", {
       name: "name"
     });
 
@@ -109,11 +106,11 @@ describe("Upsert", function() {
 
   it("Should update the item if already present in the state", function() {
     // GIVEN
-    const insertAction: InsertAction<TestItem> = domain.actionCreators.createInsertAction<TestItem>("id", {
+    const insertAction: InsertAction<TestItem> = domain.actionCreators.createInsertAction("id", {
       name: "name",
       optional0: "optional0"
     });
-    const upsertAction: UpsertAction<TestItem> = domain.actionCreators.createUpsertAction<TestItem>("id", {
+    const upsertAction: UpsertAction<TestItem> = domain.actionCreators.createUpsertAction("id", {
       name: "updated name"
     });
 
@@ -132,18 +129,15 @@ describe("Upsert", function() {
 describe("Update", function() {
   beforeEach(function() {
     store = createStore(domain.reducer);
-    const anotherInsertAction: InsertAction<TestItem> = domain.actionCreators.createInsertAction<TestItem>(
-      "anotherId",
-      {
-        name: "anotherName"
-      }
-    );
+    const anotherInsertAction: InsertAction<TestItem> = domain.actionCreators.createInsertAction("anotherId", {
+      name: "anotherName"
+    });
     store.dispatch(anotherInsertAction);
   });
 
   it("Should throw error if item is not present in the state", function() {
     // GIVEN
-    const action: UpdateAction<TestItem> = domain.actionCreators.createUpdateAction<TestItem>("id", {
+    const action: UpdateAction<TestItem> = domain.actionCreators.createUpdateAction("id", {
       name: "name"
     });
 
@@ -155,11 +149,11 @@ describe("Update", function() {
 
   it("Should update item in the state", function() {
     // GIVEN
-    const insertAction: InsertAction<TestItem> = domain.actionCreators.createInsertAction<TestItem>("id", {
+    const insertAction: InsertAction<TestItem> = domain.actionCreators.createInsertAction("id", {
       name: "name",
       optional0: "optional0"
     });
-    const updateAction: UpdateAction<TestItem> = domain.actionCreators.createUpdateAction<TestItem>("id", {
+    const updateAction: UpdateAction<TestItem> = domain.actionCreators.createUpdateAction("id", {
       name: "updated name"
     });
 
@@ -176,12 +170,12 @@ describe("Update", function() {
 
   it("Should manage resetting optional fields", function() {
     // GIVEN
-    const insertAction: InsertAction<TestItem> = domain.actionCreators.createInsertAction<TestItem>("id", {
+    const insertAction: InsertAction<TestItem> = domain.actionCreators.createInsertAction("id", {
       name: "name",
       optional0: "value",
       optional1: "value"
     });
-    const updateAction: UpdateAction<TestItem> = domain.actionCreators.createUpdateAction<TestItem>("id", {
+    const updateAction: UpdateAction<TestItem> = domain.actionCreators.createUpdateAction("id", {
       optional0: undefined
     });
 
@@ -203,18 +197,15 @@ describe("Update", function() {
 describe("Delete", function() {
   beforeEach(function() {
     store = createStore(domain.reducer);
-    const anotherInsertAction: InsertAction<TestItem> = domain.actionCreators.createInsertAction<TestItem>(
-      "anotherId",
-      {
-        name: "anotherName"
-      }
-    );
+    const anotherInsertAction: InsertAction<TestItem> = domain.actionCreators.createInsertAction("anotherId", {
+      name: "anotherName"
+    });
     store.dispatch(anotherInsertAction);
   });
 
   it("Should throw error if item is not present in the state", function() {
     // GIVEN
-    const action: DeleteAction<TestItem> = domain.actionCreators.createDeleteAction<TestItem>("id");
+    const action: DeleteAction<TestItem> = domain.actionCreators.createDeleteAction("id");
 
     // WHEN
 
@@ -224,10 +215,10 @@ describe("Delete", function() {
 
   it("Should delete item in the state", function() {
     // GIVEN
-    const insertAction: InsertAction<TestItem> = domain.actionCreators.createInsertAction<TestItem>("id", {
+    const insertAction: InsertAction<TestItem> = domain.actionCreators.createInsertAction("id", {
       name: "name"
     });
-    const deleteAction: DeleteAction<TestItem> = domain.actionCreators.createDeleteAction<TestItem>("id");
+    const deleteAction: DeleteAction<TestItem> = domain.actionCreators.createDeleteAction("id");
 
     // WHEN
     store.dispatch(insertAction);
@@ -247,7 +238,7 @@ describe("Overriding action type", function() {
 
   it("Should handle action where type is overriden", function() {
     // GIVEN
-    const action: InsertAction<TestItem> = domain.actionCreators.createInsertAction<TestItem>(
+    const action: InsertAction<TestItem> = domain.actionCreators.createInsertAction(
       "id",
       { name: "name" },
       "OVERRIDEN_ACTION_TYPE"

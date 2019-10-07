@@ -1,6 +1,6 @@
 import { Action } from "redux";
 
-export type GenericAction<T> = InsertAction<T> | UpsertAction<T> | UpdateAction<T> | DeleteAction<T>;
+export type CollectionAction<T> = InsertAction<T> | UpsertAction<T> | UpdateAction<T> | DeleteAction<T>;
 
 interface CommonGenericAction extends Action<string> {
   id: string;

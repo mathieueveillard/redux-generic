@@ -1,16 +1,16 @@
 import { Reducer } from "redux";
-import { GenericAction, InsertAction, UpsertAction, UpdateAction, DeleteAction } from "./actions";
-import { GenericState } from "./state";
+import { CollectionAction, InsertAction, UpsertAction, UpdateAction, DeleteAction } from "./actions";
+import { CollectionState } from "./state";
 
 const ITEM_ALREADY_EXISTS_ERROR_MESSAGE: string = "Item already exists";
 const ITEM_NOT_FOUND_ERROR_MESSAGE: string = "Item not found";
 
-export type GenericReducer<T> = Reducer<GenericState<T>, GenericAction<T>>;
+export type CollectionReducer<T> = Reducer<CollectionState<T>, CollectionAction<T>>;
 
-export function makeGenericReducer<T>(domain: string | symbol): GenericReducer<T> {
-  const initialState: GenericState<T> = {};
+export function makeCollectionReducer<T>(domain: string | symbol): CollectionReducer<T> {
+  const initialState: CollectionState<T> = {};
 
-  return function(state: GenericState<T> = initialState, action: GenericAction<T>): GenericState<T> {
+  return function(state: CollectionState<T> = initialState, action: CollectionAction<T>): CollectionState<T> {
     if (action.meta === undefined || !action.meta.generic) {
       return state;
     }
@@ -41,7 +41,7 @@ export function makeGenericReducer<T>(domain: string | symbol): GenericReducer<T
   };
 }
 
-function insert<T>(state: GenericState<T>, id: string, item: T): GenericState<T> {
+function insert<T>(state: CollectionState<T>, id: string, item: T): CollectionState<T> {
   if (state[id] !== undefined) {
     throw new Error(ITEM_ALREADY_EXISTS_ERROR_MESSAGE);
   }
@@ -51,14 +51,14 @@ function insert<T>(state: GenericState<T>, id: string, item: T): GenericState<T>
   };
 }
 
-function upsert<T>(state: GenericState<T>, id: string, item: T | Partial<T>): GenericState<T> {
+function upsert<T>(state: CollectionState<T>, id: string, item: T | Partial<T>): CollectionState<T> {
   if (state[id] === undefined) {
     return insert<T>(state, id, item as T);
   }
   return update<T>(state, id, item);
 }
 
-function update<T>(state: GenericState<T>, id: string, patch: Partial<T>): GenericState<T> {
+function update<T>(state: CollectionState<T>, id: string, patch: Partial<T>): CollectionState<T> {
   if (state[id] === undefined) {
     throw new Error(ITEM_NOT_FOUND_ERROR_MESSAGE);
   }
@@ -71,7 +71,7 @@ function update<T>(state: GenericState<T>, id: string, patch: Partial<T>): Gener
   };
 }
 
-function remove<T>(state: GenericState<T>, id: string): GenericState<T> {
+function remove<T>(state: CollectionState<T>, id: string): CollectionState<T> {
   if (state[id] === undefined) {
     throw new Error(ITEM_NOT_FOUND_ERROR_MESSAGE);
   }

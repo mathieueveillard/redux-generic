@@ -1,64 +1,49 @@
 # redux-generic
 
-Generic (CRUD) action creators and reducer, useful for normalizing state.
+Dumb, hence generic, action creators and reducers. You provide them with a payload, they update the state accordingly without additional thoughts. This makes sense assuming that the business intelligence is implemented in middlewares, e.g. thunks.
+
+`redux-generic` provides you with utilities for updating two kind of (sub)states: states made of one single property or states made of a collection of objects, or more specifically a set of objects indexed by an identifier.
 
 ## Installation
 
 ```
-npm install --save redux-generic
+npm i -S redux-generic
 ```
 
-## Insight
+## Usage: single property
 
-`redux-generic` creates a collection of objects as a `Record`:
+The basic approach with Redux would be to implement the business logic in the reducer. Here, we'll assume it is implemented elsewhere, so that the updated value is provided as an argument of the action creator:
 
-```typescript
-type GenericState<T> = Record<string, T>;
+```javascript
+import { createStore } from "redux";
+import { createSinglePropertyDomain } from "redux-generic";
+
+const counterDomain = createSinglePropertyDomain(0, "COUNTER");
+const store = createStore(counterDomain.reducer);
+const incrementCounter = counterDomain.actionCreator(1, "COUNTER_INCREMENTED");
+store.dispatch(incrementCounter);
 ```
 
-Though not required, it is common use for `T` to have an `id` and to use this `id` as key in the record, when calling either `actionCreators.createInsertAction()` or `actionCreators.createUpsertAction()` (see below).
+## Usage: collections
 
-`redux-generic` allows you to build a `GenericDomain` object that holds generic (CRUD) `actionCreators` and a generic `reducer`:
-
-```typescript
-interface GenericDomain<T> {
-  identifier: string | symbol;
-  actionCreators: GenericActionCreators<T>;
-  reducer: GenericReducer<T>;
-}
-```
-
-## Usage
-
-```typescript
-import { createGenericDomain, GenericDomain } from "redux-generic";
-
-interface Entity {
-  id: string;
-  // Other attributes
-}
-
-export const entityDomain: GenericDomain<Entity> = createGenericDomain("ENTITY");
-
-/*
- * GenericAction creators, to be used as any regular action creators:
- * createInsertAction<T>(id: string, item: T, type?: string): InsertAction<T>;
- * createUpsertAction<T>(id: string, item: T, type?: string): UpsertAction<T>;
- * createUpdateAction<T>(id: string, patch: Partial<T>, type?: string): UpdateAction<T>;
- * createDeleteAction<T>(id: string, type?: string): DeleteAction<T>;
- */
-entityDomain.actionCreators;
-
-/*
- * GenericReducer, to be used as any regular reducer:
- * type GenericReducer<T> = Reducer<GenericState<T>, GenericAction<T>>;
- */
-entityDomain.reducer;
-```
-
-## Inspiration
+Managing collections is a major concern when working with a normalized state. This approach is very well described in the following articles:
 
 - https://redux.js.org/recipes/structuring-reducers/normalizing-state-shape
 - https://hackernoon.com/shape-your-redux-store-like-your-database-98faa4754fd5
-- https://www.npmjs.com/package/redux-crud
-- https://github.com/markerikson/redux-ecosystem-links/blob/master/action-reducer-generators.md
+
+
+```javascript
+import { createStore } from "redux";
+import { createCollectionDomain } from "redux-generic";
+
+const userDomain = createCollectionDomain("USER");
+const store = createStore(userDomain.reducer);
+const insertUserAction = userDomain.actionCreators.createInsertAction(
+  "03ba44f",
+  { firstName: "John", lastName: "Doe" },
+  "NEW_USER_INSERTED"
+);
+store.dispatch(insertUserAction);
+```
+
+[`redux-crud`](https://www.npmjs.com/package/redux-crud) is an interesting concurrent implementation, though `redux-generic` probably covers a wider range of use cases. `redux-generic` is an implementation of dumb reducers, while `redux-crud` is a solution for the sub-problem of state normalization.
