@@ -1,8 +1,8 @@
 import { createStore, Store, AnyAction } from "redux";
-import { SinglePropertyDomain, createSinglePropertyDomain } from "./domain";
-import { SinglePropertyAction } from "./action";
+import { SingleValueDomain, createSingleValueDomain } from "./domain";
+import { SingleValueAction } from "./action";
 
-const domain: SinglePropertyDomain<number> = createSinglePropertyDomain<number>(0, "COUNTER");
+const domain: SingleValueDomain<number> = createSingleValueDomain<number>(0, "COUNTER");
 let store: Store;
 
 describe("Generic and domain", function() {
@@ -10,7 +10,7 @@ describe("Generic and domain", function() {
     store = createStore(domain.reducer);
   });
 
-  it("Should handle only single property actions of the domain with the proper type", function() {
+  it("Should handle only single value actions of the domain with the proper type", function() {
     // GIVEN
     const action: AnyAction = {
       type: "NOT_A_GENERIC_ACTION"
@@ -23,7 +23,7 @@ describe("Generic and domain", function() {
     expect(store.getState()).toEqual(0);
   });
 
-  it("Should handle only single property actions of the domain with the proper type", function() {
+  it("Should handle only single value actions of the domain with the proper type", function() {
     // GIVEN
     const action: AnyAction = {
       type: "OUT_OF_THE_DOMAIN_ACTION",
@@ -39,7 +39,7 @@ describe("Generic and domain", function() {
     expect(store.getState()).toEqual(0);
   });
 
-  it("Should handle only single property actions of the domain with the proper type", function() {
+  it("Should handle only single value actions of the domain with the proper type", function() {
     // GIVEN
     const action: AnyAction = {
       type: "OUT_OF_THE_DOMAIN_ACTION",
@@ -56,7 +56,7 @@ describe("Generic and domain", function() {
     expect(store.getState()).toEqual(0);
   });
 
-  it("Should handle only single property actions of the domain with the proper type", function() {
+  it("Should handle only single value actions of the domain with the proper type", function() {
     // GIVEN
     const action: AnyAction = {
       type: "OUT_OF_THE_DOMAIN_ACTION",
@@ -75,7 +75,7 @@ describe("Generic and domain", function() {
   });
 });
 
-describe("UPDATE_SINGLE_PROPERTY_ACTION", function() {
+describe("UPDATE_SINGLE_VALUE_ACTION", function() {
   beforeEach(function() {
     store = createStore(domain.reducer);
   });
@@ -86,7 +86,7 @@ describe("UPDATE_SINGLE_PROPERTY_ACTION", function() {
 
   it("Should update state", function() {
     // GIVEN
-    const action: SinglePropertyAction<number> = domain.actionCreator(1);
+    const action: SingleValueAction<number> = domain.actionCreator(1);
 
     // WHEN
     store.dispatch(action);

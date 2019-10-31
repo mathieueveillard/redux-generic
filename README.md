@@ -10,15 +10,15 @@ Dumb, hence generic, action creators and reducers. You provide them with a paylo
 npm i -S redux-generic
 ```
 
-## Usage: single property
+## Usage: single value
 
 The basic approach with Redux would be to implement the business logic in the reducer. Here, we'll assume it is implemented elsewhere, so that the updated value is provided as an argument of the action creator:
 
 ```javascript
 import { createStore } from "redux";
-import { createSinglePropertyDomain } from "redux-generic";
+import { createSingleValueDomain } from "redux-generic";
 
-const counterDomain = createSinglePropertyDomain(0, "COUNTER");
+const counterDomain = createSingleValueDomain(0, "COUNTER");
 const store = createStore(counterDomain.reducer);
 const incrementCounter = counterDomain.actionCreator(1, "COUNTER_INCREMENTED");
 store.dispatch(incrementCounter);
