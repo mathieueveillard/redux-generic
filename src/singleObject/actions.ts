@@ -1,11 +1,10 @@
 import { Action } from "redux";
 
-export type CollectionAction<T> = InsertAction<T> | UpsertAction<T> | UpdateAction<T> | DeleteAction;
+export type SingleObjectAction<T> = InsertAction<T> | UpsertAction<T> | UpdateAction<T> | DeleteAction;
 
 interface CommonAction extends Action<string> {
-  id: string;
   meta: {
-    collection: true;
+    singleObject: true;
     domain: string | symbol;
   };
 }
@@ -13,26 +12,26 @@ interface CommonAction extends Action<string> {
 export type InsertAction<T> = CommonAction & {
   item: T;
   meta: {
-    type: "COLLECTION_INSERT_ACTION";
+    type: "SINGLE_OBJECT_INSERT_ACTION";
   };
 };
 
 export type UpsertAction<T> = CommonAction & {
   item: T;
   meta: {
-    type: "COLLECTION_UPSERT_ACTION";
+    type: "SINGLE_OBJECT_UPSERT_ACTION";
   };
 };
 
 export type UpdateAction<T> = CommonAction & {
   patch: Partial<T>;
   meta: {
-    type: "COLLECTION_UPDATE_ACTION";
+    type: "SINGLE_OBJECT_UPDATE_ACTION";
   };
 };
 
 export type DeleteAction = CommonAction & {
   meta: {
-    type: "COLLECTION_DELETE_ACTION";
+    type: "SINGLE_OBJECT_DELETE_ACTION";
   };
 };

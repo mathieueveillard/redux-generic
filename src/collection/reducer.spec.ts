@@ -8,18 +8,18 @@ interface TestItem {
   optional1?: string;
 }
 
-const domain: CollectionDomain<TestItem> = createCollectionDomain<TestItem>();
+const domain: CollectionDomain<TestItem> = createCollectionDomain<TestItem>("DOMAIN");
 let store: Store;
 
-describe("Generic and domain", function() {
+describe("Collection", function() {
   beforeEach(function() {
     store = createStore(domain.reducer);
   });
 
-  it("Should handle only generic actions", function() {
+  it("Should handle only actions of the domain", function() {
     // GIVEN
-    const action: Action = {
-      type: "NOT_A_GENERIC_ACTION"
+    const action = {
+      type: "NOT_A_SINGLE_OBJECT_ACTION"
     };
 
     // WHEN
@@ -29,12 +29,47 @@ describe("Generic and domain", function() {
     expect(store.getState()).toEqual({});
   });
 
-  it("Should handle only generic actions of the domain", function() {
+  it("Should handle only actions of the domain", function() {
     // GIVEN
-    const action: Action & { meta: { generic: boolean } } = {
+    const action = {
       type: "OUT_OF_THE_DOMAIN_ACTION",
       meta: {
-        generic: false
+        collection: false
+      }
+    };
+
+    // WHEN
+    store.dispatch(action);
+
+    // THEN
+    expect(store.getState()).toEqual({});
+  });
+
+  it("Should handle only actions of the domain", function() {
+    // GIVEN
+    const action = {
+      type: "OUT_OF_THE_DOMAIN_ACTION",
+      meta: {
+        collection: true,
+        domain: "ANOTHER_DOMAIN"
+      }
+    };
+
+    // WHEN
+    store.dispatch(action);
+
+    // THEN
+    expect(store.getState()).toEqual({});
+  });
+
+  it("Should handle only actions of the domain", function() {
+    // GIVEN
+    const action = {
+      type: "OUT_OF_THE_DOMAIN_ACTION",
+      meta: {
+        collection: true,
+        domain: "DOMAIN",
+        type: "OUT_OF_THE_DOMAIN_ACTION"
       }
     };
 
@@ -76,53 +111,6 @@ describe("Insert", function() {
     // WHEN
     // THEN
     expect(() => store.dispatch(action)).toThrow("Item already exists");
-  });
-});
-
-describe("Upsert", function() {
-  beforeEach(function() {
-    store = createStore(domain.reducer);
-    const anotherInsertAction: InsertAction<TestItem> = domain.actionCreators.createInsertAction("anotherId", {
-      name: "anotherName"
-    });
-    store.dispatch(anotherInsertAction);
-  });
-
-  it("Should add item to the state if not present", function() {
-    // GIVEN
-    const action: UpsertAction<TestItem> = domain.actionCreators.createUpsertAction("id", {
-      name: "name"
-    });
-
-    // WHEN
-    store.dispatch(action);
-
-    // THEN
-    expect(store.getState()).toEqual({
-      ["anotherId"]: { name: "anotherName" },
-      ["id"]: { name: "name" }
-    });
-  });
-
-  it("Should update the item if already present in the state", function() {
-    // GIVEN
-    const insertAction: InsertAction<TestItem> = domain.actionCreators.createInsertAction("id", {
-      name: "name",
-      optional0: "optional0"
-    });
-    const upsertAction: UpsertAction<TestItem> = domain.actionCreators.createUpsertAction("id", {
-      name: "updated name"
-    });
-
-    // WHEN
-    store.dispatch(insertAction);
-    store.dispatch(upsertAction);
-
-    // THEN
-    expect(store.getState()).toEqual({
-      ["anotherId"]: { name: "anotherName" },
-      ["id"]: { name: "updated name", optional0: "optional0" }
-    });
   });
 });
 
@@ -194,6 +182,53 @@ describe("Update", function() {
   });
 });
 
+describe("Upsert", function() {
+  beforeEach(function() {
+    store = createStore(domain.reducer);
+    const anotherInsertAction: InsertAction<TestItem> = domain.actionCreators.createInsertAction("anotherId", {
+      name: "anotherName"
+    });
+    store.dispatch(anotherInsertAction);
+  });
+
+  it("Should add item to the state if not present", function() {
+    // GIVEN
+    const action: UpsertAction<TestItem> = domain.actionCreators.createUpsertAction("id", {
+      name: "name"
+    });
+
+    // WHEN
+    store.dispatch(action);
+
+    // THEN
+    expect(store.getState()).toEqual({
+      ["anotherId"]: { name: "anotherName" },
+      ["id"]: { name: "name" }
+    });
+  });
+
+  it("Should update the item if already present in the state", function() {
+    // GIVEN
+    const insertAction: InsertAction<TestItem> = domain.actionCreators.createInsertAction("id", {
+      name: "name",
+      optional0: "optional0"
+    });
+    const upsertAction: UpsertAction<TestItem> = domain.actionCreators.createUpsertAction("id", {
+      name: "updated name"
+    });
+
+    // WHEN
+    store.dispatch(insertAction);
+    store.dispatch(upsertAction);
+
+    // THEN
+    expect(store.getState()).toEqual({
+      ["anotherId"]: { name: "anotherName" },
+      ["id"]: { name: "updated name", optional0: "optional0" }
+    });
+  });
+});
+
 describe("Delete", function() {
   beforeEach(function() {
     store = createStore(domain.reducer);
@@ -205,7 +240,7 @@ describe("Delete", function() {
 
   it("Should throw error if item is not present in the state", function() {
     // GIVEN
-    const action: DeleteAction<TestItem> = domain.actionCreators.createDeleteAction("id");
+    const action: DeleteAction = domain.actionCreators.createDeleteAction("id");
 
     // WHEN
 
@@ -218,7 +253,7 @@ describe("Delete", function() {
     const insertAction: InsertAction<TestItem> = domain.actionCreators.createInsertAction("id", {
       name: "name"
     });
-    const deleteAction: DeleteAction<TestItem> = domain.actionCreators.createDeleteAction("id");
+    const deleteAction: DeleteAction = domain.actionCreators.createDeleteAction("id");
 
     // WHEN
     store.dispatch(insertAction);
@@ -227,29 +262,6 @@ describe("Delete", function() {
     // THEN
     expect(store.getState()).toEqual({
       ["anotherId"]: { name: "anotherName" }
-    });
-  });
-});
-
-describe("Overriding action type", function() {
-  beforeEach(function() {
-    store = createStore(domain.reducer);
-  });
-
-  it("Should handle action where type is overriden", function() {
-    // GIVEN
-    const action: InsertAction<TestItem> = domain.actionCreators.createInsertAction(
-      "id",
-      { name: "name" },
-      "OVERRIDEN_ACTION_TYPE"
-    );
-
-    // WHEN
-    store.dispatch(action);
-
-    // THEN
-    expect(store.getState()).toEqual({
-      ["id"]: { name: "name" }
     });
   });
 });

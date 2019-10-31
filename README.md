@@ -2,7 +2,7 @@
 
 Dumb, hence generic, action creators and reducers. You provide them with a payload, they update the state accordingly without additional thoughts. This makes sense assuming that the business intelligence is implemented in middlewares, e.g. thunks.
 
-`redux-generic` provides you with utilities for updating two kind of (sub)states: states made of one single property or states made of a collection of objects, or more specifically a set of objects indexed by an identifier.
+`redux-generic` provides you with utilities for updating three kinds of states: states made of one single value, states made of one single object and states made of a collection of objects (more specifically a set of objects indexed by an identifier).
 
 ## Installation
 
@@ -24,13 +24,26 @@ const incrementCounter = counterDomain.actionCreator(1, "COUNTER_INCREMENTED");
 store.dispatch(incrementCounter);
 ```
 
+## Usage: single object
+
+Same thing, but the state is now an object, and the reducers knows how to update it partially.
+
+```javascript
+import { createStore } from "redux";
+import { createSingleObjectDomain } from "redux-generic";
+
+const counterDomain = createSingleObjectDomain({}, "NAME");
+const store = createStore(counterDomain.reducer);
+const updateFirstName = counterDomain.actionCreators.createUpdateAction({ firstName: "First" }, "FIRST_NAME_UPDATED");
+store.dispatch(updateFirstName);
+```
+
 ## Usage: collections
 
 Managing collections is a major concern when working with a normalized state. This approach is very well described in the following articles:
 
 - https://redux.js.org/recipes/structuring-reducers/normalizing-state-shape
 - https://hackernoon.com/shape-your-redux-store-like-your-database-98faa4754fd5
-
 
 ```javascript
 import { createStore } from "redux";

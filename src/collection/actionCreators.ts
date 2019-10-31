@@ -4,57 +4,57 @@ export interface CollectionActionCreators<T> {
   createInsertAction(id: string, item: T, type?: string): InsertAction<T>;
   createUpsertAction(id: string, item: T, type?: string): UpsertAction<T>;
   createUpdateAction(id: string, patch: Partial<T>, type?: string): UpdateAction<T>;
-  createDeleteAction(id: string, type?: string): DeleteAction<T>;
+  createDeleteAction(id: string, type?: string): DeleteAction;
 }
 
 export function makeCollectionActionCreators<T>(domain: string | symbol): CollectionActionCreators<T> {
   function createInsertAction<T>(id: string, item: T, type?: string): InsertAction<T> {
     return {
-      type: type || "GENERIC_INSERT_ACTION",
+      type: type || "COLLECTION_INSERT_ACTION",
       id,
       item,
       meta: {
-        generic: true,
+        collection: true,
         domain,
-        type: "GENERIC_INSERT_ACTION"
+        type: "COLLECTION_INSERT_ACTION"
       }
     };
   }
 
   function createUpsertAction<T>(id: string, item: T, type?: string): UpsertAction<T> {
     return {
-      type: type || "GENERIC_UPSERT_ACTION",
+      type: type || "COLLECTION_UPSERT_ACTION",
       id,
       item,
       meta: {
-        generic: true,
+        collection: true,
         domain,
-        type: "GENERIC_UPSERT_ACTION"
+        type: "COLLECTION_UPSERT_ACTION"
       }
     };
   }
 
   function createUpdateAction<T>(id: string, patch: Partial<T>, type?: string): UpdateAction<T> {
     return {
-      type: type || "GENERIC_UPDATE_ACTION",
+      type: type || "COLLECTION_UPDATE_ACTION",
       id,
       patch,
       meta: {
-        generic: true,
+        collection: true,
         domain,
-        type: "GENERIC_UPDATE_ACTION"
+        type: "COLLECTION_UPDATE_ACTION"
       }
     };
   }
 
-  function createDeleteAction<T>(id: string, type?: string): DeleteAction<T> {
+  function createDeleteAction(id: string, type?: string): DeleteAction {
     return {
-      type: type || "GENERIC_DELETE_ACTION",
+      type: type || "COLLECTION_DELETE_ACTION",
       id,
       meta: {
-        generic: true,
+        collection: true,
         domain,
-        type: "GENERIC_DELETE_ACTION"
+        type: "COLLECTION_DELETE_ACTION"
       }
     };
   }

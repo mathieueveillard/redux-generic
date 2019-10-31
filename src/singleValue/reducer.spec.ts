@@ -5,7 +5,7 @@ import { SingleValueAction } from "./action";
 const domain: SingleValueDomain<number> = createSingleValueDomain<number>(0, "COUNTER");
 let store: Store;
 
-describe("Generic and domain", function() {
+describe("Single Value", function() {
   beforeEach(function() {
     store = createStore(domain.reducer);
   });
@@ -13,7 +13,7 @@ describe("Generic and domain", function() {
   it("Should handle only single value actions of the domain with the proper type", function() {
     // GIVEN
     const action: AnyAction = {
-      type: "NOT_A_GENERIC_ACTION"
+      type: "NOT_A_COLLECTION_ACTION"
     };
 
     // WHEN
@@ -72,12 +72,6 @@ describe("Generic and domain", function() {
 
     // THEN
     expect(store.getState()).toEqual(0);
-  });
-});
-
-describe("UPDATE_SINGLE_VALUE_ACTION", function() {
-  beforeEach(function() {
-    store = createStore(domain.reducer);
   });
 
   it("Should set default state", function() {
