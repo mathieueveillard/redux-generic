@@ -1,1 +1,1 @@
-export type SingleObjectState<T> = T | undefined;
+export type SingleObjectState<T> = T | null;

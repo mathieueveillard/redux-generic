@@ -9,7 +9,7 @@ export type SingleObjectReducer<T> = Reducer<SingleObjectState<T>, SingleObjectA
 
 export function makeSingleObjectReducer<T>(
   domain: string | symbol,
-  initialState: T | undefined
+  initialState: T | null
 ): SingleObjectReducer<T> {
   return function(state: SingleObjectState<T> = initialState, action: SingleObjectAction<T>): SingleObjectState<T> {
     if (action.meta === undefined || !action.meta.singleObject) {
@@ -34,7 +34,7 @@ export function makeSingleObjectReducer<T>(
         return upsert(state, item);
       }
       case "SINGLE_OBJECT_DELETE_ACTION": {
-        return remove(state);
+        return remove();
       }
       default:
         return state;
@@ -43,14 +43,14 @@ export function makeSingleObjectReducer<T>(
 }
 
 function insert<T>(state: SingleObjectState<T>, item: T): SingleObjectState<T> {
-  if (state !== undefined) {
+  if (!(state === undefined || state === null)) {
     throw new Error(STATE_ALREADY_INITIALIZED_ERROR_MESSAGE);
   }
   return item;
 }
 
 function update<T>(state: SingleObjectState<T>, patch: Partial<T>): SingleObjectState<T> {
-  if (state === undefined) {
+  if (state === undefined || state === null) {
     throw new Error(STATE_NOT_INITIALIZED_YET_ERROR_MESSAGE);
   }
   return {
@@ -60,15 +60,12 @@ function update<T>(state: SingleObjectState<T>, patch: Partial<T>): SingleObject
 }
 
 function upsert<T>(state: SingleObjectState<T>, item: T | Partial<T>): SingleObjectState<T> {
-  if (state === undefined) {
+  if (state === undefined || state === null) {
     return insert<T>(state, item as T);
   }
   return update<T>(state, item);
 }
 
-function remove<T>(state: SingleObjectState<T>): SingleObjectState<T> {
-  if (state === undefined) {
-    throw new Error(STATE_NOT_INITIALIZED_YET_ERROR_MESSAGE);
-  }
-  return undefined;
+function remove<T>(): SingleObjectState<T> {
+  return null;
 }

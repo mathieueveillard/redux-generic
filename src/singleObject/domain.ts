@@ -8,7 +8,7 @@ export interface SingleObjectDomain<T> {
 }
 
 export function createSingleObjectDomain<T>(
-  initialState: T | undefined,
+  initialState: T | null,
   discriminator?: string
 ): SingleObjectDomain<T> {
   const identifier = discriminator || Symbol();

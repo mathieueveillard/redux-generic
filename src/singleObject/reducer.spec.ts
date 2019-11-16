@@ -8,7 +8,7 @@ interface TestItem {
   optional1?: string;
 }
 
-const domain: SingleObjectDomain<TestItem> = createSingleObjectDomain<TestItem>(undefined, "DOMAIN");
+const domain: SingleObjectDomain<TestItem> = createSingleObjectDomain<TestItem>(null, "DOMAIN");
 let store: Store;
 
 describe("Single Object", function() {
@@ -26,7 +26,7 @@ describe("Single Object", function() {
     store.dispatch(action);
 
     // THEN
-    expect(store.getState()).toEqual(undefined);
+    expect(store.getState()).toEqual(null);
   });
 
   it("Should handle only actions of the domain", function() {
@@ -42,7 +42,7 @@ describe("Single Object", function() {
     store.dispatch(action);
 
     // THEN
-    expect(store.getState()).toEqual(undefined);
+    expect(store.getState()).toEqual(null);
   });
 
   it("Should handle only actions of the domain", function() {
@@ -59,7 +59,7 @@ describe("Single Object", function() {
     store.dispatch(action);
 
     // THEN
-    expect(store.getState()).toEqual(undefined);
+    expect(store.getState()).toEqual(null);
   });
 
   it("Should handle only actions of the domain", function() {
@@ -77,7 +77,7 @@ describe("Single Object", function() {
     store.dispatch(action);
 
     // THEN
-    expect(store.getState()).toEqual(undefined);
+    expect(store.getState()).toEqual(null);
   });
 });
 
@@ -213,15 +213,6 @@ describe("Delete", function() {
     store = createStore(domain.reducer);
   });
 
-  it("Should throw error if item is not present in the state", function() {
-    // GIVEN
-    // WHEN
-    const action: DeleteAction = domain.actionCreators.createDeleteAction();
-
-    // THEN
-    expect(() => store.dispatch(action)).toThrow("The state has not been initialized yet.");
-  });
-
   it("Should delete item in the state", function() {
     // GIVEN
     const insertAction: InsertAction<TestItem> = domain.actionCreators.createInsertAction({
@@ -234,6 +225,6 @@ describe("Delete", function() {
     store.dispatch(deleteAction);
 
     // THEN
-    expect(store.getState()).toEqual(undefined);
+    expect(store.getState()).toEqual(null);
   });
 });
